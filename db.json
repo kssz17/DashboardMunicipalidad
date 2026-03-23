@@ -1,0 +1,27 @@
+{
+  "usuarios": [
+    { "id": 1, "nombre": "Juan Pérez", "email": "juan@email.com", "rol": "Ciudadano", "fechaRegistro": "2024-01-15", "estado": "Activo" },
+    { "id": 2, "nombre": "María García", "email": "maria@email.com", "rol": "Funcionario", "fechaRegistro": "2024-02-20", "estado": "Activo" },
+    { "id": 3, "nombre": "Carlos López", "email": "carlos@email.com", "rol": "Ciudadano", "fechaRegistro": "2024-03-10", "estado": "Inactivo" },
+    { "id": 4, "nombre": "Ana Martínez", "email": "ana@email.com", "rol": "Administrador", "fechaRegistro": "2024-01-05", "estado": "Activo" },
+    { "id": 5, "nombre": "Roberto Sánchez", "email": "roberto@email.com", "rol": "Ciudadano", "fechaRegistro": "2024-03-22", "estado": "Activo" }
+  ],
+  "proyectos": [
+    { "id": 1, "nombre": "Parque Central", "descripcion": "Remodelación del parque principal", "presupuesto": 150000, "estado": "En progreso", "fechaInicio": "2024-02-01", "fechaFin": "2024-06-30", "progreso": 45 },
+    { "id": 2, "nombre": "Alumbrado Público", "descripcion": "Instalación de nuevas luminarias LED", "presupuesto": 80000, "estado": "Completado", "fechaInicio": "2024-01-10", "fechaFin": "2024-03-15", "progreso": 100 },
+    { "id": 3, "nombre": "Ciclovías", "descripcion": "Construcción de red de ciclovías", "presupuesto": 200000, "estado": "Planificado", "fechaInicio": "2024-05-01", "fechaFin": "2024-10-30", "progreso": 0 },
+    { "id": 4, "nombre": "Centro Cultural", "descripcion": "Rehabilitación del centro cultural", "presupuesto": 300000, "estado": "En progreso", "fechaInicio": "2024-03-01", "fechaFin": "2024-09-30", "progreso": 25 }
+  ],
+  "presupuestos": [
+    { "id": 1, "categoria": "Infraestructura", "asignado": 500000, "ejecutado": 350000, "disponible": 150000, "año": 2024 },
+    { "id": 2, "categoria": "Educación", "asignado": 300000, "ejecutado": 120000, "disponible": 180000, "año": 2024 },
+    { "id": 3, "categoria": "Salud", "asignado": 400000, "ejecutado": 280000, "disponible": 120000, "año": 2024 },
+    { "id": 4, "categoria": "Seguridad", "asignado": 250000, "ejecutado": 180000, "disponible": 70000, "año": 2024 },
+    { "id": 5, "categoria": "Cultura", "asignado": 150000, "ejecutado": 45000, "disponible": 105000, "año": 2024 }
+  ],
+  "reportes": [
+    { "id": 1, "tipo": "Mensual", "fecha": "2024-03-31", "descripcion": "Reporte de actividades marzo 2024", "archivo": "reporte_marzo.pdf" },
+    { "id": 2, "tipo": "Trimestral", "fecha": "2024-03-31", "descripcion": "Reporte Q1 2024", "archivo": "reporte_q1.pdf" },
+    { "id": 3, "tipo": "Presupuestario", "fecha": "2024-02-28", "descripcion": "Ejecución presupuestaria febrero", "archivo": "presupuesto_feb.pdf" }
+  ]
+}
