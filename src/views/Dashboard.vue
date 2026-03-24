@@ -1,130 +1,76 @@
 <template>
-  <div class="space-y-6 text-gray-200">
-
+  <div class="space-y-6">
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
-      <div 
-        v-for="stat in stats" 
-        :key="stat.title" 
-        class="bg-gray-900/70 backdrop-blur border border-gray-800 rounded-xl p-4 md:p-5 shadow-md hover:shadow-lg transition"
-      >
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div v-for="stat in stats" :key="stat.title" class="card">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-400 text-xs md:text-sm">{{ stat.title }}</p>
-            <p class="text-xl md:text-2xl font-semibold">{{ stat.value }}</p>
+            <p class="text-gray-500 text-sm">{{ stat.title }}</p>
+            <p class="text-2xl font-bold">{{ stat.value }}</p>
           </div>
-          <span class="text-2xl md:text-3xl opacity-80">{{ stat.icon }}</span>
+          <span class="text-3xl">{{ stat.icon }}</span>
         </div>
-
-        <div 
-          v-if="stat.trend" 
-          class="mt-2 text-xs md:text-sm flex items-center gap-1"
-          :class="stat.trend > 0 ? 'text-green-400' : 'text-red-400'"
-        >
-          <span>{{ stat.trend > 0 ? '↑' : '↓' }}</span>
-          <span>{{ Math.abs(stat.trend) }}%</span>
+        <div v-if="stat.trend" class="mt-2 text-sm" :class="stat.trend > 0 ? 'text-green-600' : 'text-red-600'">
+          {{ stat.trend > 0 ? '↑' : '↓' }} {{ Math.abs(stat.trend) }}%
         </div>
       </div>
     </div>
 
     <!-- Charts -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-      
-      <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4 md:p-5 shadow-md">
-        <h3 class="text-base md:text-lg font-semibold mb-4 text-gray-300">
-          Estado de Proyectos
-        </h3>
-
-        <div class="h-64 md:h-80">
-          <ProjectStatusChart :data="projectStatusData" />
-        </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="card">
+        <h3 class="text-lg font-semibold mb-4">Estado de Proyectos</h3>
+        <ProjectStatusChart :data="projectStatusData" />
       </div>
-
-      <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4 md:p-5 shadow-md">
-        <h3 class="text-base md:text-lg font-semibold mb-4 text-gray-300">
-          Presupuesto por Categoría
-        </h3>
-
-        <div class="h-64 md:h-80">
-          <BudgetChart :data="budgetData" />
-        </div>
+      <div class="card">
+        <h3 class="text-lg font-semibold mb-4">Presupuesto por Categoría</h3>
+        <BudgetChart :data="budgetData" />
       </div>
-
     </div>
 
     <!-- Recent Projects -->
-    <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4 md:p-5 shadow-md">
-      
-      <h3 class="text-base md:text-lg font-semibold mb-4 text-gray-300">
-        Proyectos Recientes
-      </h3>
-
+    <div class="card">
+      <h3 class="text-lg font-semibold mb-4">Proyectos Recientes</h3>
       <div v-if="proyectosRecientes.length > 0" class="overflow-x-auto">
-        
-        <table class="min-w-[600px] w-full text-xs md:text-sm">
-          
+        <table class="min-w-full">
           <thead>
-            <tr class="border-b border-gray-800 text-gray-400">
+            <tr class="border-b">
               <th class="text-left py-3">Proyecto</th>
               <th class="text-left py-3">Estado</th>
               <th class="text-left py-3">Progreso</th>
               <th class="text-left py-3">Presupuesto</th>
             </tr>
           </thead>
-
           <tbody>
-            <tr 
-              v-for="proyecto in proyectosRecientes" 
-              :key="proyecto.id" 
-              class="border-b border-gray-800 hover:bg-gray-800/40 transition"
-            >
-              <td class="py-3 text-gray-200">{{ proyecto.nombre }}</td>
-
+            <tr v-for="proyecto in proyectosRecientes" :key="proyecto.id" class="border-b hover:bg-gray-50">
+              <td class="py-3">{{ proyecto.nombre }}</td>
               <td>
-                <span 
-                  class="px-2 py-1 text-xs rounded-full font-medium"
+                <span class="px-2 py-1 text-xs rounded-full" 
                   :class="{
-                    'bg-green-900/40 text-green-400': proyecto.estado === 'Completado',
-                    'bg-yellow-900/40 text-yellow-400': proyecto.estado === 'En progreso',
-                    'bg-gray-700 text-gray-300': proyecto.estado === 'Planificado'
-                  }"
-                >
+                    'bg-green-100 text-green-800': proyecto.estado === 'Completado',
+                    'bg-yellow-100 text-yellow-800': proyecto.estado === 'En progreso',
+                    'bg-gray-100 text-gray-800': proyecto.estado === 'Planificado'
+                  }">
                   {{ proyecto.estado }}
                 </span>
               </td>
-
               <td class="py-3">
-                <div class="flex items-center gap-2">
-                  
-                  <div class="w-full max-w-[120px] bg-gray-800 rounded-full h-2">
-                    <div 
-                      class="bg-indigo-500 rounded-full h-2 transition-all"
-                      :style="{ width: proyecto.progreso + '%' }"
-                    ></div>
+                <div class="flex items-center">
+                  <div class="w-32 bg-gray-200 rounded-full h-2 mr-2">
+                    <div class="bg-primary-600 rounded-full h-2" :style="{ width: proyecto.progreso + '%' }"></div>
                   </div>
-
-                  <span class="text-xs md:text-sm text-gray-300">
-                    {{ proyecto.progreso }}%
-                  </span>
-
+                  <span>{{ proyecto.progreso }}%</span>
                 </div>
               </td>
-
-              <td class="py-3 text-gray-300">
-                ${{ formatNumber(proyecto.presupuesto) }}
-              </td>
+              <td class="py-3">${{ formatNumber(proyecto.presupuesto) }}</td>
             </tr>
           </tbody>
-
         </table>
       </div>
-
       <div v-else class="text-center py-8 text-gray-500">
         No hay proyectos disponibles
       </div>
-
     </div>
-
   </div>
 </template>
 
