@@ -1,5 +1,5 @@
 
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
 import Usuarios from '../views/Usuarios.vue'
 import Proyectos from '../views/Proyectos.vue'
