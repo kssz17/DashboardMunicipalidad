@@ -1,107 +1,35 @@
-<!-- src/views/Reportes.vue - ARCHIVO NUEVO Y SEPARADO -->
 <template>
-  <div class="space-y-6">
+  <div class="space-y-6 text-gray-200">
+
     <div class="flex justify-between items-center">
-      <h2 class="text-2xl font-bold">Centro de Reportes</h2>
-      <button class="btn-primary flex items-center">
-        <span class="mr-2">📄</span> Generar Reporte
-      </button>
+      <h2 class="text-xl md:text-2xl font-semibold">Reportes</h2>
+      <button class="bg-indigo-600 px-4 py-2 rounded-lg">📄 Generar</button>
     </div>
 
-    <!-- Tarjetas de resumen -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-      <div class="card bg-gradient-to-br from-primary-500 to-primary-700 text-white">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-primary-100 text-sm">Reportes Generados</p>
-            <p class="text-3xl font-bold">{{ totalReportes }}</p>
-          </div>
-          <span class="text-3xl">📊</span>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-gray-500 text-sm">Descargas Totales</p>
-            <p class="text-2xl font-bold">{{ totalDescargas }}</p>
-          </div>
-          <span class="text-3xl text-green-600">⬇️</span>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-gray-500 text-sm">Tipos de Reporte</p>
-            <p class="text-2xl font-bold">{{ tiposUnicos }}</p>
-          </div>
-          <span class="text-3xl text-purple-600">📋</span>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-gray-500 text-sm">Última Actualización</p>
-            <p class="text-sm font-medium">{{ ultimaActualizacion }}</p>
-          </div>
-          <span class="text-3xl text-blue-600">🕐</span>
-        </div>
+    <!-- Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+        <p class="text-gray-400 text-sm">Reportes</p>
+        <p class="text-xl font-semibold">{{ totalReportes }}</p>
       </div>
     </div>
 
-    <!-- Filtros -->
-    <div class="card">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <!-- Lista -->
+    <div class="space-y-3">
+      <div v-for="r in filteredReportes" :key="r.id"
+        class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex justify-between items-center">
+
         <div>
-          <label class="block text-sm font-medium mb-1">Buscar</label>
-          <input v-model="filtros.busqueda" type="text" placeholder="Buscar reporte..." class="input-field">
+          <p class="font-medium">{{ r.descripcion }}</p>
+          <p class="text-xs text-gray-400">{{ r.tipo }}</p>
         </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Tipo</label>
-          <select v-model="filtros.tipo" class="input-field">
-            <option value="">Todos</option>
-            <option value="Mensual">Mensual</option>
-            <option value="Trimestral">Trimestral</option>
-            <option value="Presupuestario">Presupuestario</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Fecha</label>
-          <input v-model="filtros.fecha" type="month" class="input-field">
-        </div>
+
+        <button class="bg-indigo-600 px-3 py-1 rounded text-sm">
+          Descargar
+        </button>
       </div>
     </div>
 
-    <!-- Lista de reportes -->
-    <div class="card">
-      <h3 class="text-lg font-semibold mb-4">Reportes Disponibles</h3>
-      <div class="space-y-3">
-        <div v-for="reporte in filteredReportes" :key="reporte.id" 
-          class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-          <div class="flex items-start justify-between">
-            <div class="flex-1">
-              <div class="flex items-center gap-3">
-                <span class="text-2xl">{{ getIcono(reporte.tipo) }}</span>
-                <div>
-                  <h4 class="font-semibold">{{ reporte.descripcion }}</h4>
-                  <div class="flex gap-4 mt-1 text-sm text-gray-600">
-                    <span>{{ reporte.tipo }}</span>
-                    <span>{{ formatDate(reporte.fecha) }}</span>
-                    <span>{{ reporte.archivo }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button @click="descargarReporte(reporte)" 
-              class="btn-primary text-sm py-1 px-3">
-              Descargar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 

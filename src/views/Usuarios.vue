@@ -1,109 +1,44 @@
 <template>
-  <div class="space-y-6">
+  <div class="space-y-6 text-gray-200">
+
     <!-- Header -->
-    <div class="flex justify-between items-center">
-      <h2 class="text-2xl font-bold">Gestión de Usuarios</h2>
-      <button @click="showModal = true" class="btn-primary flex items-center">
-        <span class="mr-2">➕</span> Nuevo Usuario
-      </button>
+    <div class="flex justify-between">
+      <h2 class="text-xl md:text-2xl font-semibold">Usuarios</h2>
+      <button class="bg-indigo-600 px-4 py-2 rounded-lg">➕ Nuevo</button>
     </div>
 
     <!-- Filters -->
-    <div class="card flex gap-4">
-      <input 
-        v-model="filters.search" 
-        type="text" 
-        placeholder="Buscar usuario..." 
-        class="input-field flex-1"
-      >
-      <select v-model="filters.rol" class="input-field w-48">
-        <option value="">Todos los roles</option>
-        <option value="Ciudadano">Ciudadano</option>
-        <option value="Funcionario">Funcionario</option>
-        <option value="Administrador">Administrador</option>
-      </select>
-      <select v-model="filters.estado" class="input-field w-48">
-        <option value="">Todos los estados</option>
-        <option value="Activo">Activo</option>
-        <option value="Inactivo">Inactivo</option>
-      </select>
+    <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex flex-col md:flex-row gap-3">
+      <input placeholder="Buscar..." class="flex-1 bg-gray-800 px-3 py-2 rounded-lg text-sm">
     </div>
 
-    <!-- Users Table -->
-    <div class="card">
-      <div class="overflow-x-auto">
-        <table class="min-w-full">
-          <thead>
-            <tr class="border-b">
-              <th class="text-left py-3">ID</th>
-              <th class="text-left py-3">Nombre</th>
-              <th class="text-left py-3">Email</th>
-              <th class="text-left py-3">Rol</th>
-              <th class="text-left py-3">Fecha Registro</th>
-              <th class="text-left py-3">Estado</th>
-              <th class="text-left py-3">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="usuario in filteredUsuarios" :key="usuario.id" class="border-b hover:bg-gray-50">
-              <td class="py-3">{{ usuario.id }}</td>
-              <td class="py-3 font-medium">{{ usuario.nombre }}</td>
-              <td class="py-3">{{ usuario.email }}</td>
-              <td class="py-3">{{ usuario.rol }}</td>
-              <td class="py-3">{{ formatDate(usuario.fechaRegistro) }}</td>
-              <td class="py-3">
-                <span class="px-2 py-1 text-xs rounded-full" 
-                  :class="usuario.estado === 'Activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
-                  {{ usuario.estado }}
-                </span>
-              </td>
-              <td class="py-3">
-                <button @click="editUser(usuario)" class="text-blue-600 hover:text-blue-800 mr-3">✏️</button>
-                <button @click="deleteUser(usuario.id)" class="text-red-600 hover:text-red-800">🗑️</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- Table -->
+    <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 overflow-x-auto">
+      <table class="min-w-[600px] w-full text-sm">
+        <thead class="text-gray-400 border-b border-gray-800">
+          <tr>
+            <th class="text-left py-2">Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="u in filteredUsuarios" :key="u.id" class="border-b border-gray-800">
+            <td class="py-3">{{ u.nombre }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.rol }}</td>
+            <td>
+              <span class="text-xs px-2 py-1 rounded bg-gray-700">
+                {{ u.estado }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <!-- Modal -->
-    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div class="bg-white rounded-lg p-6 w-96">
-        <h3 class="text-lg font-semibold mb-4">{{ editingUser ? 'Editar' : 'Nuevo' }} Usuario</h3>
-        <form @submit.prevent="saveUser">
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium mb-1">Nombre</label>
-              <input v-model="form.nombre" type="text" required class="input-field">
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-1">Email</label>
-              <input v-model="form.email" type="email" required class="input-field">
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-1">Rol</label>
-              <select v-model="form.rol" required class="input-field">
-                <option value="Ciudadano">Ciudadano</option>
-                <option value="Funcionario">Funcionario</option>
-                <option value="Administrador">Administrador</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-1">Estado</label>
-              <select v-model="form.estado" required class="input-field">
-                <option value="Activo">Activo</option>
-                <option value="Inactivo">Inactivo</option>
-              </select>
-            </div>
-          </div>
-          <div class="flex justify-end gap-3 mt-6">
-            <button type="button" @click="closeModal" class="btn-secondary">Cancelar</button>
-            <button type="submit" class="btn-primary">Guardar</button>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
 </template>
 

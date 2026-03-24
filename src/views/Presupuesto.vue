@@ -1,184 +1,64 @@
 <template>
-  <div class="space-y-6">
-    <div class="flex justify-between items-center">
-      <h2 class="text-2xl font-bold">Ejecución Presupuestaria {{ añoActual }}</h2>
-      <div class="flex gap-2">
-        <select v-model="añoSeleccionado" class="input-field w-32">
+  <div class="space-y-6 text-gray-200">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+      <h2 class="text-xl md:text-2xl font-semibold">
+        Ejecución Presupuestaria {{ añoActual }}
+      </h2>
+
+      <div class="flex flex-wrap gap-2">
+        <select v-model="añoSeleccionado" class="bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm">
           <option value="2024">2024</option>
           <option value="2023">2023</option>
-          <option value="2022">2022</option>
         </select>
-        <button class="btn-primary flex items-center">
-          <span class="mr-2">📊</span> Exportar
+
+        <button class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg text-sm flex items-center">
+          📊 Exportar
         </button>
       </div>
     </div>
 
-    <!-- KPI Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-      <div class="card">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm">Presupuesto Total</p>
-            <p class="text-2xl font-bold">${{ formatNumber(totalPresupuesto) }}</p>
-          </div>
-          <span class="text-3xl text-primary-600">💰</span>
-        </div>
-        <div class="mt-2 text-sm text-green-600">↑ 8% vs año anterior</div>
+    <!-- KPI -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4">
+        <p class="text-gray-400 text-sm">Presupuesto Total</p>
+        <p class="text-xl font-semibold">${{ formatNumber(totalPresupuesto) }}</p>
       </div>
 
-      <div class="card">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm">Ejecutado</p>
-            <p class="text-2xl font-bold">${{ formatNumber(totalEjecutado) }}</p>
-          </div>
-          <span class="text-3xl text-yellow-600">📊</span>
-        </div>
-        <div class="mt-2 text-sm text-gray-600">{{ porcentajeEjecucion }}% del total</div>
+      <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4">
+        <p class="text-gray-400 text-sm">Ejecutado</p>
+        <p class="text-xl font-semibold">${{ formatNumber(totalEjecutado) }}</p>
       </div>
 
-      <div class="card">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm">Disponible</p>
-            <p class="text-2xl font-bold">${{ formatNumber(totalDisponible) }}</p>
-          </div>
-          <span class="text-3xl text-green-600">💵</span>
-        </div>
-        <div class="mt-2 text-sm text-blue-600">Saldo restante</div>
+      <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4">
+        <p class="text-gray-400 text-sm">Disponible</p>
+        <p class="text-xl font-semibold">${{ formatNumber(totalDisponible) }}</p>
       </div>
 
-      <div class="card">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm">Proyectos en curso</p>
-            <p class="text-2xl font-bold">{{ proyectosActivos }}</p>
-          </div>
-          <span class="text-3xl text-purple-600">🚧</span>
-        </div>
-        <div class="mt-2 text-sm text-gray-600">Con presupuesto asignado</div>
+      <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4">
+        <p class="text-gray-400 text-sm">Proyectos</p>
+        <p class="text-xl font-semibold">{{ proyectosActivos }}</p>
       </div>
     </div>
 
-    <!-- Gráficos de Presupuesto -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div class="card">
-        <h3 class="text-lg font-semibold mb-4">Distribución por Categoría</h3>
-        <div style="height: 300px;">
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4">
+        <h3 class="mb-3 text-gray-300">Distribución</h3>
+        <div class="h-64 md:h-80">
           <BudgetPieChart :data="budgetDistributionData" />
         </div>
       </div>
-      
-      <div class="card">
-        <h3 class="text-lg font-semibold mb-4">Ejecución Mensual</h3>
-        <div style="height: 300px;">
+
+      <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4">
+        <h3 class="mb-3 text-gray-300">Ejecución Mensual</h3>
+        <div class="h-64 md:h-80">
           <MonthlyExecutionChart :data="monthlyData" />
         </div>
       </div>
     </div>
 
-    <!-- Tabla detallada de presupuestos -->
-    <div class="card">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold">Detalle por Categoría</h3>
-        <div class="flex gap-2">
-          <input 
-            v-model="filtroCategoria" 
-            type="text" 
-            placeholder="Buscar categoría..." 
-            class="input-field text-sm py-1"
-          >
-        </div>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="min-w-full">
-          <thead>
-            <tr class="border-b bg-gray-50">
-              <th class="text-left py-3 px-4">Categoría</th>
-              <th class="text-left py-3 px-4">Presupuesto Asignado</th>
-              <th class="text-left py-3 px-4">Ejecutado</th>
-              <th class="text-left py-3 px-4">Disponible</th>
-              <th class="text-left py-3 px-4">% Ejecución</th>
-              <th class="text-left py-3 px-4">Proyectos</th>
-              <th class="text-left py-3 px-4">Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in filteredPresupuestos" :key="item.id" class="border-b hover:bg-gray-50">
-              <td class="py-3 px-4 font-medium">{{ item.categoria }}</td>
-              <td class="py-3 px-4">${{ formatNumber(item.asignado) }}</td>
-              <td class="py-3 px-4">${{ formatNumber(item.ejecutado) }}</td>
-              <td class="py-3 px-4">${{ formatNumber(item.disponible) }}</td>
-              <td class="py-3 px-4">
-                <div class="flex items-center gap-2">
-                  <div class="w-24 bg-gray-200 rounded-full h-2">
-                    <div class="bg-primary-600 rounded-full h-2" 
-                      :style="{ width: porcentaje(item.ejecutado, item.asignado) + '%' }">
-                    </div>
-                  </div>
-                  <span class="text-sm">{{ porcentaje(item.ejecutado, item.asignado) }}%</span>
-                </div>
-              </td>
-              <td class="py-3 px-4">
-                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                  {{ item.proyectos || 3 }} proyectos
-                </span>
-              </td>
-              <td class="py-3 px-4">
-                <span class="px-2 py-1 text-xs rounded-full" 
-                  :class="{
-                    'bg-green-100 text-green-800': (item.ejecutado / item.asignado) < 0.7,
-                    'bg-yellow-100 text-yellow-800': (item.ejecutado / item.asignado) >= 0.7 && (item.ejecutado / item.asignado) < 0.9,
-                    'bg-red-100 text-red-800': (item.ejecutado / item.asignado) >= 0.9
-                  }">
-                  {{ getEstadoPresupuesto(item) }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-          <tfoot class="bg-gray-50 font-semibold">
-            <tr>
-              <td class="py-3 px-4">TOTAL</td>
-              <td class="py-3 px-4">${{ formatNumber(totalAsignado) }}</td>
-              <td class="py-3 px-4">${{ formatNumber(totalEjecutado) }}</td>
-              <td class="py-3 px-4">${{ formatNumber(totalDisponible) }}</td>
-              <td class="py-3 px-4">{{ porcentajeEjecucion }}%</td>
-              <td class="py-3 px-4"></td>
-              <td class="py-3 px-4"></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-
-    <!-- Proyectos por categoría -->
-    <div class="card">
-      <h3 class="text-lg font-semibold mb-4">Proyectos por Categoría</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div v-for="categoria in categoriasConProyectos" :key="categoria.nombre" 
-          class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-          <div class="flex justify-between items-start mb-2">
-            <h4 class="font-semibold">{{ categoria.nombre }}</h4>
-            <span class="text-xs bg-primary-100 text-primary-800 px-2 py-1 rounded-full">
-              {{ categoria.proyectos.length }} proyectos
-            </span>
-          </div>
-          <p class="text-sm text-gray-600 mb-2">Presupuesto: ${{ formatNumber(categoria.presupuesto) }}</p>
-          <div class="space-y-2">
-            <div v-for="proyecto in categoria.proyectos.slice(0, 2)" :key="proyecto.id" 
-              class="text-xs flex justify-between">
-              <span>{{ proyecto.nombre }}</span>
-              <span class="text-gray-500">${{ formatNumber(proyecto.presupuesto) }}</span>
-            </div>
-            <div v-if="categoria.proyectos.length > 2" class="text-xs text-primary-600">
-              +{{ categoria.proyectos.length - 2 }} más
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
